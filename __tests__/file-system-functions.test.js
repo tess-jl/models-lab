@@ -1,17 +1,21 @@
 const {
   mkdirp,
-  writeJSON 
-//   readDirectoryJSON, 
+  writeJSON,
+  readJSON
+//   readDirectoryJSON,
 //   updateJSON, 
 //   deleteFile
 } = require('../lib/file-system-functions.js');
 
 const fs = require('fs').promises;
 
+const mockObject = { hello: 'hi I am a mock object' };
+
 jest.mock('fs', () => ({
   promises: {
     mkdir: jest.fn(() => Promise.resolve('This would be the path')), 
-    writeFile: jest.fn(() => Promise.resolve('The file has been written'))
+    writeFile: jest.fn(() => Promise.resolve('The file has been written')),
+    readFile: jest.fn(() => Promise.resolve(JSON.stringify(mockObject)))
   }
 }));
 
@@ -27,6 +31,13 @@ describe('file system functions', () => {
     return writeJSON('./file.js', {})
       .then(() => {
         expect(fs.writeFile).toHaveBeenLastCalledWith('./file.js', '{}');
+      });
+  });
+  it('reads an object from a file (readJSON function)', () => {
+    return readJSON('./file.js')
+      .then((result) => {
+        expect(fs.readFile).toHaveBeenLastCalledWith('./file.js', 'utf8');
+        expect(result).toEqual(mockObject);
       });
   });
 
