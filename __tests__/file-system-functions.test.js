@@ -9,15 +9,15 @@ const {
 
 const fs = require('fs').promises;
 
-const mockObject = { hello: 'hi I am a mock object' };
-const mockArray = [{ file1: 'name1' }, { file2: 'name2' }, { file3: 'name3' }];
+const mockObject = { mockKey: 'mock value' };
+const mockArray = [{ mockKey: 'mock value' }, { mockKey: 'mock value' }];
 
 jest.mock('fs', () => ({
   promises: {
     mkdir: jest.fn(() => Promise.resolve('This would be the path')), 
     writeFile: jest.fn(() => Promise.resolve('The file has been written')),
     readFile: jest.fn(() => Promise.resolve(JSON.stringify(mockObject))), 
-    readdir: jest.fn(() => Promise.resolve(JSON.stringify(mockArray))),
+    readdir: jest.fn(() => Promise.resolve(mockArray)),
   }
 }));
 
@@ -42,10 +42,10 @@ describe('file system functions', () => {
       });
   });
   it('read all files in a directory as objects (readDirectoryJSON function)', () => {
-    return readDirectoryJSON('./file.js')
-      .then(() => {
-        expect(fs.readdir).toHaveBeenLastCalledWith('./file.js');
-        // expect(result2).toEqual(readJSON(mockArray));
+    return readDirectoryJSON('./file2.js')
+      .then((result2) => {
+        expect(fs.readdir).toHaveBeenLastCalledWith('./file2.js');
+        expect(result2).toEqual(mockArray);
       });
   });
 
