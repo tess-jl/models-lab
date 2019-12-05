@@ -2,8 +2,8 @@ const {
   mkdirp,
   writeJSON,
   readJSON,
-  readDirectoryJSON
-//   updateJSON, 
+  readDirectoryJSON,
+  updateJSON
 //   deleteFile
 } = require('../lib/file-system-functions.js');
 
@@ -42,9 +42,16 @@ describe('file system functions', () => {
       });
   });
   it('read all files in a directory as objects (readDirectoryJSON function)', () => {
-    return readDirectoryJSON('./file2.js')
+    return readDirectoryJSON('./')
       .then((result2) => {
-        expect(fs.readdir).toHaveBeenLastCalledWith('./file2.js');
+        expect(fs.readdir).toHaveBeenLastCalledWith('./');
+        expect(result2).toEqual(mockArray);
+      });
+  });
+  it('updates a file JSON by overriding it (updateJSON function)', () => {
+    return updateJSON('./')
+      .then((result2) => {
+        expect(fs.readdir).toHaveBeenLastCalledWith('./');
         expect(result2).toEqual(mockArray);
       });
   });
